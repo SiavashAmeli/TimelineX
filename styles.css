@@ -1,0 +1,443 @@
+.timelinex-view {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+
+.timelinex-sidebar {
+  width: 280px;
+  min-width: 280px;
+  border-right: 1px solid var(--background-modifier-border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.timelinex-sidebar-header {
+  padding: 16px 16px 12px 16px;
+}
+
+.timelinex-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.timelinex-title-icon {
+  display: inline-flex;
+  color: var(--interactive-accent);
+}
+
+.timelinex-sidebar-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  margin-top: 2px;
+}
+
+.timelinex-section {
+  padding: 12px 16px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.timelinex-section-label {
+  font-size: 0.72em;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.timelinex-section-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.timelinex-link-row a {
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.timelinex-timelines-section {
+  flex: 1;
+}
+
+.timelinex-timelines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timelinex-empty-hint {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.timelinex-timeline-row {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.timelinex-timeline-row-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timelinex-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Native color input styled as a small circular swatch, used both as the
+   timeline's color indicator and as the click target to change its color. */
+.timelinex-color-dot {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: none;
+}
+.timelinex-color-dot::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 50%;
+}
+.timelinex-color-dot::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+.timelinex-color-dot::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.timelinex-timeline-name {
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timelinex-count-badge {
+  background: var(--background-modifier-border);
+  border-radius: 10px;
+  padding: 0 7px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+}
+
+.timelinex-eye-btn,
+.timelinex-solo-icon,
+.timelinex-more-btn {
+  display: inline-flex;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 2px;
+  border-radius: 4px;
+}
+.timelinex-eye-btn:hover,
+.timelinex-solo-icon:hover,
+.timelinex-more-btn:hover {
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
+}
+
+.timelinex-solo-icon.is-active {
+  color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+}
+
+.timelinex-sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--background-modifier-border);
+  margin-top: auto;
+}
+
+.timelinex-stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85em;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+
+.timelinex-orphan-hint {
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  font-size: 0.78em;
+  cursor: pointer;
+  line-height: 1.3;
+}
+.timelinex-orphan-hint:hover {
+  color: var(--text-normal);
+}
+
+/* ---------- Main ---------- */
+
+.timelinex-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.timelinex-main-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.timelinex-main-title {
+  font-size: 1.15em;
+  font-weight: 700;
+}
+
+.timelinex-main-subtitle {
+  color: var(--text-muted);
+  font-size: 0.82em;
+  margin-top: 2px;
+}
+
+/* ---------- Toolbar: calendar select, zoom select, zoom slider ---------- */
+
+.timelinex-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.timelinex-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timelinex-toolbar-label {
+  font-size: 0.75em;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.timelinex-calendar-select,
+.timelinex-zoom-select {
+  font-size: 0.85em;
+  padding: 4px 6px;
+}
+
+.timelinex-slider-group {
+  flex: 1;
+  min-width: 220px;
+  gap: 8px;
+}
+
+.timelinex-zoom-slider {
+  flex: 1;
+  min-width: 140px;
+  max-width: 320px;
+  cursor: pointer;
+}
+
+.timelinex-zoom-pct {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  min-width: 3.2em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.timelinex-scroll-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.timelinex-canvas {
+  position: relative;
+  min-height: 100%;
+}
+
+.timelinex-axis {
+  position: sticky;
+  top: 0;
+  height: 32px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  z-index: 3;
+}
+
+.timelinex-tick {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-left: 1px solid var(--background-modifier-border);
+  padding-left: 4px;
+  font-size: 0.75em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.timelinex-today-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed var(--text-error);
+  z-index: 2;
+}
+
+.timelinex-today-label {
+  position: absolute;
+  top: 4px;
+  transform: translateX(4px);
+  font-size: 0.72em;
+  color: var(--text-error);
+  z-index: 4;
+  font-weight: 600;
+}
+
+.timelinex-tracks {
+  position: relative;
+}
+
+.timelinex-track {
+  position: relative;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.timelinex-track-label {
+  position: sticky;
+  left: 8px;
+  top: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.85em;
+  padding: 4px 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.timelinex-track-label-text {
+  background: var(--background-primary);
+  padding: 0 4px;
+}
+
+.timelinex-pill {
+  position: absolute;
+  height: 22px;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.75em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: grab;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  user-select: none;
+}
+
+.timelinex-pill.is-point {
+  border-radius: 11px;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.timelinex-pill:hover {
+  filter: brightness(1.15);
+}
+
+.timelinex-pill.is-dragging {
+  cursor: grabbing;
+  filter: brightness(1.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  z-index: 5;
+}
+
+/* Drag handles at the edges of a range event, for resizing its start/end date. */
+.timelinex-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+  cursor: ew-resize;
+  opacity: 0;
+}
+.timelinex-resize-handle.is-left {
+  left: 0;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.timelinex-resize-handle.is-right {
+  right: 0;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.timelinex-pill:hover .timelinex-resize-handle {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Drag confirmation bar (floats above the pill after a drag) ---------- */
+
+.timelinex-drag-confirm {
+  position: fixed;
+  z-index: 200;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-l, 0 4px 12px rgba(0, 0, 0, 0.35));
+  padding: 8px 10px;
+  font-size: 0.82em;
+  max-width: 320px;
+}
+
+.timelinex-drag-confirm-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+.timelinex-drag-confirm-actions button {
+  font-size: 0.85em;
+  padding: 3px 10px;
+}
+
+/* ---------- Undo link inside the post-save Notice ---------- */
+
+.timelinex-undo-link {
+  color: var(--interactive-accent);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
