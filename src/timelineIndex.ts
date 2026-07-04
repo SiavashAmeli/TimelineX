@@ -55,7 +55,7 @@ export class TimeLineXIndex extends Component {
 
     for (const file of files) {
       const cache = this.app.metadataCache.getFileCache(file);
-      const fm = cache?.frontmatter;
+      const fm = cache?.frontmatter as Record<string, unknown> | undefined;
       if (!fm) continue;
 
       const rawDate = fm[this.settings.dateKey];
@@ -163,7 +163,7 @@ export class TimeLineXIndex extends Component {
     for (const path of paths) {
       const file = this.getFile(path);
       if (!file) continue;
-      await this.app.fileManager.processFrontMatter(file, (fm) => {
+      await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
         fm[this.settings.timelineKey] = newName;
       });
     }
@@ -187,7 +187,7 @@ export class TimeLineXIndex extends Component {
     for (const path of paths) {
       const file = this.getFile(path);
       if (!file) continue;
-      await this.app.fileManager.processFrontMatter(file, (fm) => {
+      await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
         delete fm[this.settings.timelineKey];
       });
     }

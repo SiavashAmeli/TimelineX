@@ -25,7 +25,7 @@ export class NewEventModal extends Modal {
     defaultDate: string,
     defaultTimeline: string,
     defaultCalendar: CalendarSystem,
-    private onSubmit: (data: NewEventData) => void
+    private onSubmit: (data: NewEventData) => void | Promise<void>
   ) {
     super(app);
     this.date = defaultDate;
@@ -80,7 +80,7 @@ export class NewEventModal extends Modal {
             new Notice("Title, date, and timeline are all required.");
             return;
           }
-          this.onSubmit({
+          void this.onSubmit({
             title: this.title,
             date: this.date,
             dateEnd: this.dateEnd,
@@ -103,7 +103,7 @@ export class RenameTimelineModal extends Modal {
   constructor(
     app: App,
     private oldName: string,
-    private onSubmit: (newName: string) => void
+    private onSubmit: (newName: string) => void | Promise<void>
   ) {
     super(app);
     this.newName = oldName;
@@ -128,7 +128,7 @@ export class RenameTimelineModal extends Modal {
             this.close();
             return;
           }
-          this.onSubmit(this.newName);
+          void this.onSubmit(this.newName);
           this.close();
         })
     );
@@ -146,7 +146,7 @@ export class MergeTimelineModal extends Modal {
     app: App,
     private sourceName: string,
     private otherNames: string[],
-    private onSubmit: (target: string) => void
+    private onSubmit: (target: string) => void | Promise<void>
   ) {
     super(app);
     this.target = otherNames[0] ?? "";
@@ -167,13 +167,14 @@ export class MergeTimelineModal extends Modal {
     new Setting(contentEl).addButton((b) =>
       b
         .setButtonText("Merge")
-        .setWarning()
+        .setDestructive()
+        .setCta()
         .onClick(() => {
           if (!this.target) {
             new Notice("Choose a target timeline.");
             return;
           }
-          this.onSubmit(this.target);
+          void this.onSubmit(this.target);
           this.close();
         })
     );
@@ -189,7 +190,7 @@ export class ConfirmModal extends Modal {
     app: App,
     private message: string,
     private confirmText: string,
-    private onConfirm: () => void
+    private onConfirm: () => void | Promise<void>
   ) {
     super(app);
   }
@@ -205,7 +206,7 @@ export class ConfirmModal extends Modal {
       cls: "mod-warning",
     });
     confirmBtn.onclick = () => {
-      this.onConfirm();
+      void this.onConfirm();
       this.close();
     };
   }

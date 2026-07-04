@@ -148,6 +148,10 @@ export class TimeLineXView extends ItemView {
   // exactly to the cursor position after a full re-render.
   private lastDataMin = 0;
   private lastPixelsPerYear = 1;
+  // Tracks the AbortController used for a given scroll container's
+  // scroll/wheel listeners, so re-rendering into the same container (as the
+  // zoom slider does) can cleanly tear down the previous listeners.
+  private canvasAbortControllers = new WeakMap<HTMLElement, AbortController>();
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -326,7 +330,7 @@ export class TimeLineXView extends ItemView {
 
   private openFileByPath(path: string): void {
     const file = this.index.getFile(path);
-    if (file) this.app.workspace.getLeaf(false).openFile(file);
+    if (file) void this.app.workspace.getLeaf(false).openFile(file);
   }
 
   private openTimelineActionsMenu(
@@ -648,12 +652,10 @@ export class TimeLineXView extends ItemView {
     // The zoom slider re-invokes this on the *same* container repeatedly (to
     // avoid tearing down the slider's own DOM node mid-drag), so listeners
     // from any previous call need to be torn down first or they'd pile up.
-    const prevController = (container as unknown as { _timelinexAbort?: AbortController })
-      ._timelinexAbort;
+    const prevController = this.canvasAbortControllers.get(container);
     if (prevController) prevController.abort();
     const abortController = new AbortController();
-    (container as unknown as { _timelinexAbort?: AbortController })._timelinexAbort =
-      abortController;
+    this.canvasAbortControllers.set(container, abortController);
     const { signal } = abortController;
 
     const today = todayDecimalYear();
@@ -696,7 +698,7 @@ export class TimeLineXView extends ItemView {
       "scroll",
       () => {
         if (scrollTickRaf !== null) return;
-        scrollTickRaf = requestAnimationFrame(() => {
+        scrollTickRaf = window.requestAnimationFrame(() => {
           scrollTickRaf = null;
           renderVisibleTicks();
         });
@@ -782,9 +784,9 @@ export class TimeLineXView extends ItemView {
         this.zoomPercent = Math.min(100, Math.max(0, this.zoomPercent + step));
         this.render();
 
-        const newContainer = this.containerEl.querySelector(
+        const newContainer = this.containerEl.querySelector<HTMLElement>(
           ".timelinex-scroll-container"
-        ) as HTMLElement | null;
+        );
         if (newContainer) {
           const newScrollLeft =
             (yearUnderCursor - this.lastDataMin) * this.lastPixelsPerYear - cursorX;
@@ -836,8 +838,8 @@ export class TimeLineXView extends ItemView {
     };
 
     const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      activeDocument.removeEventListener("mousemove", onMouseMove);
+      activeDocument.removeEventListener("mouseup", onMouseUp);
       pill.removeClass("is-dragging");
       if (mode && moved) {
         if (this.settings.confirmDragEdits) {
@@ -859,15 +861,15 @@ export class TimeLineXView extends ItemView {
       pendingStart = ev.startYear;
       pendingEnd = ev.endYear;
       moved = false;
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      activeDocument.addEventListener("mousemove", onMouseMove);
+      activeDocument.addEventListener("mouseup", onMouseUp);
     };
 
     pill.onmousedown = startDrag("move");
     pill.onclick = () => {
       if (moved) return; // just finished a drag, don't also open the note
       const file = this.index.getFile(ev.filePath);
-      if (file) this.app.workspace.getLeaf(false).openFile(file);
+      if (file) void this.app.workspace.getLeaf(false).openFile(file);
     };
 
     if (ev.isRange) {
@@ -888,7 +890,7 @@ export class TimeLineXView extends ItemView {
     const startGregorian = decimalYearToGregorian(newStartYear);
     const startLocal = fromGregorian(ev.sourceCalendar, startGregorian);
 
-    await this.app.fileManager.processFrontMatter(file, (fm) => {
+    await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
       fm[this.settings.dateKey] = toFrontmatterDateString(startLocal);
       if (ev.isRange) {
         const endGregorian = decimalYearToGregorian(newEndYear);
@@ -910,7 +912,7 @@ export class TimeLineXView extends ItemView {
     newEnd: number
   ): void {
     const rect = pill.getBoundingClientRect();
-    const bar = document.body.createDiv({ cls: "timelinex-drag-confirm" });
+    const bar = activeDocument.body.createDiv({ cls: "timelinex-drag-confirm" });
     bar.style.left = `${Math.max(4, rect.left)}px`;
     bar.style.top = `${rect.bottom + 6}px`;
     bar.createSpan({
@@ -923,7 +925,7 @@ export class TimeLineXView extends ItemView {
     let settled = false;
     const cleanup = () => {
       bar.remove();
-      document.removeEventListener("mousedown", onOutsideClick, true);
+      activeDocument.removeEventListener("mousedown", onOutsideClick, true);
     };
     const onOutsideClick = (e: MouseEvent) => {
       if (settled) return;
@@ -946,7 +948,7 @@ export class TimeLineXView extends ItemView {
     };
     // Deferred so the mouseup that ended the drag doesn't immediately count
     // as an "outside click".
-    setTimeout(() => document.addEventListener("mousedown", onOutsideClick, true), 0);
+    window.setTimeout(() => activeDocument.addEventListener("mousedown", onOutsideClick, true), 0);
   }
 
   /** Writes the new date(s) to frontmatter, then offers a quick Undo toast. */
@@ -959,7 +961,7 @@ export class TimeLineXView extends ItemView {
     const prevEnd = ev.endYear;
     await this.commitEventDates(ev, newStartYear, newEndYear);
 
-    const frag = document.createDocumentFragment();
+    const frag = activeDocument.createDocumentFragment();
     frag.createSpan({
       text: `Updated "${ev.title}" to ${this.formatEventRangeFor(newStartYear, newEndYear, ev.isRange)}. `,
     });

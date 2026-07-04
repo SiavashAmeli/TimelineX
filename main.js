@@ -445,7 +445,7 @@ var TimeLineXSettingTab = class extends import_obsidian2.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "TimeLineX" });
+    new import_obsidian2.Setting(containerEl).setName("TimeLineX").setHeading();
     new import_obsidian2.Setting(containerEl).setName("Display calendar").setDesc(
       "Calendar used to label years and dates on the timeline. This only affects display \u2014 your notes' frontmatter is untouched."
     ).addDropdown(
@@ -454,7 +454,7 @@ var TimeLineXSettingTab = class extends import_obsidian2.PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
-    containerEl.createEl("h3", { text: "Frontmatter property names" });
+    new import_obsidian2.Setting(containerEl).setName("Frontmatter property names").setHeading();
     containerEl.createEl("p", {
       cls: "setting-item-description",
       text: "TimeLineX reads these frontmatter keys from your notes. Change them if you already use different property names."
@@ -493,7 +493,7 @@ var TimeLineXSettingTab = class extends import_obsidian2.PluginSettingTab {
         await this.plugin.saveSettings();
       })
     );
-    containerEl.createEl("h3", { text: "Timeline colors" });
+    new import_obsidian2.Setting(containerEl).setName("Timeline colors").setHeading();
     const names = this.plugin.settings.timelineOrder;
     if (names.length === 0) {
       containerEl.createEl("p", {
@@ -567,7 +567,7 @@ var NewEventModal = class extends import_obsidian3.Modal {
           new import_obsidian3.Notice("Title, date, and timeline are all required.");
           return;
         }
-        this.onSubmit({
+        void this.onSubmit({
           title: this.title,
           date: this.date,
           dateEnd: this.dateEnd,
@@ -605,7 +605,7 @@ var RenameTimelineModal = class extends import_obsidian3.Modal {
           this.close();
           return;
         }
-        this.onSubmit(this.newName);
+        void this.onSubmit(this.newName);
         this.close();
       })
     );
@@ -637,12 +637,12 @@ var MergeTimelineModal = class extends import_obsidian3.Modal {
       dd.onChange((v) => this.target = v);
     });
     new import_obsidian3.Setting(contentEl).addButton(
-      (b) => b.setButtonText("Merge").setWarning().onClick(() => {
+      (b) => b.setButtonText("Merge").setDestructive().setCta().onClick(() => {
         if (!this.target) {
           new import_obsidian3.Notice("Choose a target timeline.");
           return;
         }
-        this.onSubmit(this.target);
+        void this.onSubmit(this.target);
         this.close();
       })
     );
@@ -669,7 +669,7 @@ var ConfirmModal = class extends import_obsidian3.Modal {
       cls: "mod-warning"
     });
     confirmBtn.onclick = () => {
-      this.onConfirm();
+      void this.onConfirm();
       this.close();
     };
   }
@@ -803,6 +803,10 @@ var TimeLineXView = class extends import_obsidian4.ItemView {
     // exactly to the cursor position after a full re-render.
     this.lastDataMin = 0;
     this.lastPixelsPerYear = 1;
+    // Tracks the AbortController used for a given scroll container's
+    // scroll/wheel listeners, so re-rendering into the same container (as the
+    // zoom slider does) can cleanly tear down the previous listeners.
+    this.canvasAbortControllers = /* @__PURE__ */ new WeakMap();
   }
   getViewType() {
     return VIEW_TYPE_TIMELINEX;
@@ -951,7 +955,7 @@ var TimeLineXView = class extends import_obsidian4.ItemView {
   }
   openFileByPath(path) {
     const file = this.index.getFile(path);
-    if (file) this.app.workspace.getLeaf(false).openFile(file);
+    if (file) void this.app.workspace.getLeaf(false).openFile(file);
   }
   openTimelineActionsMenu(e, group, allGroups) {
     const menu = new import_obsidian4.Menu();
@@ -1195,10 +1199,10 @@ var TimeLineXView = class extends import_obsidian4.ItemView {
   }
   renderTimelineCanvas(container, groups, events, dataMin, dataMax, totalYears) {
     var _a;
-    const prevController = container._timelinexAbort;
+    const prevController = this.canvasAbortControllers.get(container);
     if (prevController) prevController.abort();
     const abortController = new AbortController();
-    container._timelinexAbort = abortController;
+    this.canvasAbortControllers.set(container, abortController);
     const { signal } = abortController;
     const today = todayDecimalYear();
     const viewportWidth = Math.max(container.clientWidth, 800);
@@ -1231,7 +1235,7 @@ var TimeLineXView = class extends import_obsidian4.ItemView {
       "scroll",
       () => {
         if (scrollTickRaf !== null) return;
-        scrollTickRaf = requestAnimationFrame(() => {
+        scrollTickRaf = window.requestAnimationFrame(() => {
           scrollTickRaf = null;
           renderVisibleTicks();
         });
@@ -1347,8 +1351,8 @@ ${this.formatEventRange(ev)}
       pill.addClass("is-dragging");
     };
     const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      activeDocument.removeEventListener("mousemove", onMouseMove);
+      activeDocument.removeEventListener("mouseup", onMouseUp);
       pill.removeClass("is-dragging");
       if (mode && moved) {
         if (this.settings.confirmDragEdits) {
@@ -1369,14 +1373,14 @@ ${this.formatEventRange(ev)}
       pendingStart = ev.startYear;
       pendingEnd = ev.endYear;
       moved = false;
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      activeDocument.addEventListener("mousemove", onMouseMove);
+      activeDocument.addEventListener("mouseup", onMouseUp);
     };
     pill.onmousedown = startDrag("move");
     pill.onclick = () => {
       if (moved) return;
       const file = this.index.getFile(ev.filePath);
-      if (file) this.app.workspace.getLeaf(false).openFile(file);
+      if (file) void this.app.workspace.getLeaf(false).openFile(file);
     };
     if (ev.isRange) {
       const leftHandle = pill.createDiv({ cls: "timelinex-resize-handle is-left" });
@@ -1406,7 +1410,7 @@ ${this.formatEventRange(ev)}
    */
   showDragConfirmation(pill, ev, newStart, newEnd) {
     const rect = pill.getBoundingClientRect();
-    const bar = document.body.createDiv({ cls: "timelinex-drag-confirm" });
+    const bar = activeDocument.body.createDiv({ cls: "timelinex-drag-confirm" });
     bar.style.left = `${Math.max(4, rect.left)}px`;
     bar.style.top = `${rect.bottom + 6}px`;
     bar.createSpan({
@@ -1418,7 +1422,7 @@ ${this.formatEventRange(ev)}
     let settled = false;
     const cleanup = () => {
       bar.remove();
-      document.removeEventListener("mousedown", onOutsideClick, true);
+      activeDocument.removeEventListener("mousedown", onOutsideClick, true);
     };
     const onOutsideClick = (e) => {
       if (settled) return;
@@ -1438,14 +1442,14 @@ ${this.formatEventRange(ev)}
       cleanup();
       this.render();
     };
-    setTimeout(() => document.addEventListener("mousedown", onOutsideClick, true), 0);
+    window.setTimeout(() => activeDocument.addEventListener("mousedown", onOutsideClick, true), 0);
   }
   /** Writes the new date(s) to frontmatter, then offers a quick Undo toast. */
   async commitEventDatesWithUndo(ev, newStartYear, newEndYear) {
     const prevStart = ev.startYear;
     const prevEnd = ev.endYear;
     await this.commitEventDates(ev, newStartYear, newEndYear);
-    const frag = document.createDocumentFragment();
+    const frag = activeDocument.createDocumentFragment();
     frag.createSpan({
       text: `Updated "${ev.title}" to ${this.formatEventRangeFor(newStartYear, newEndYear, ev.isRange)}. `
     });
@@ -1523,12 +1527,12 @@ var TimeLineXPlugin = class extends import_obsidian5.Plugin {
       void this.activateView();
     });
     this.addCommand({
-      id: "open-timelinex",
+      id: "open-timeline-view",
       name: "Open timeline view",
       callback: () => void this.activateView()
     });
     this.addCommand({
-      id: "set-timelinex-date",
+      id: "set-date-and-timeline",
       name: "Set date & timeline for this note",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveFile();
@@ -1550,10 +1554,11 @@ var TimeLineXPlugin = class extends import_obsidian5.Plugin {
       leaf = workspace.getLeaf("tab");
       await leaf.setViewState({ type: VIEW_TYPE_TIMELINEX, active: true });
     }
-    workspace.revealLeaf(leaf);
+    await workspace.revealLeaf(leaf);
   }
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const loaded = await this.loadData();
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, loaded != null ? loaded : {});
   }
   async saveSettings() {
     var _a;

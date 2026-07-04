@@ -10,7 +10,7 @@ export class TimeLineXSettingTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "TimeLineX" });
+    new Setting(containerEl).setName("TimeLineX").setHeading();
 
     new Setting(containerEl)
       .setName("Display calendar")
@@ -29,7 +29,7 @@ export class TimeLineXSettingTab extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl("h3", { text: "Frontmatter property names" });
+    new Setting(containerEl).setName("Frontmatter property names").setHeading();
     containerEl.createEl("p", {
       cls: "setting-item-description",
       text:
@@ -90,7 +90,7 @@ export class TimeLineXSettingTab extends PluginSettingTab {
         })
       );
 
-    containerEl.createEl("h3", { text: "Timeline colors" });
+    new Setting(containerEl).setName("Timeline colors").setHeading();
     const names = this.plugin.settings.timelineOrder;
     if (names.length === 0) {
       containerEl.createEl("p", {

@@ -28,13 +28,13 @@ export default class TimeLineXPlugin extends Plugin {
     });
 
     this.addCommand({
-      id: "open-timelinex",
+      id: "open-timeline-view",
       name: "Open timeline view",
       callback: () => void this.activateView(),
     });
 
     this.addCommand({
-      id: "set-timelinex-date",
+      id: "set-date-and-timeline",
       name: "Set date & timeline for this note",
       checkCallback: (checking: boolean) => {
         const file = this.app.workspace.getActiveFile();
@@ -61,11 +61,12 @@ export default class TimeLineXPlugin extends Plugin {
       leaf = workspace.getLeaf("tab");
       await leaf.setViewState({ type: VIEW_TYPE_TIMELINEX, active: true });
     }
-    workspace.revealLeaf(leaf);
+    await workspace.revealLeaf(leaf);
   }
 
   async loadSettings(): Promise<void> {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const loaded = (await this.loadData()) as Partial<TimeLineXSettings> | null;
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, loaded ?? {});
   }
 
   async saveSettings(): Promise<void> {
@@ -89,7 +90,7 @@ class TimeLineXDateModal extends Modal {
     contentEl.createEl("h2", { text: `TimeLineX date — ${this.file.basename}` });
 
     const cache = this.app.metadataCache.getFileCache(this.file);
-    const fm = cache?.frontmatter;
+    const fm = cache?.frontmatter as Record<string, unknown> | undefined;
     if (fm) {
       this.date = String(fm[this.plugin.settings.dateKey] ?? "");
       this.dateEnd = String(fm[this.plugin.settings.dateEndKey] ?? "");
@@ -144,7 +145,7 @@ class TimeLineXDateModal extends Modal {
       return;
     }
     const s = this.plugin.settings;
-    await this.app.fileManager.processFrontMatter(this.file, (fm) => {
+    await this.app.fileManager.processFrontMatter(this.file, (fm: Record<string, unknown>) => {
       fm[s.dateKey] = this.date;
       if (this.dateEnd) fm[s.dateEndKey] = this.dateEnd;
       else delete fm[s.dateEndKey];
