@@ -164,10 +164,8 @@ export class MergeTimelineModal extends Modal {
       dd.setValue(this.target);
       dd.onChange((v) => (this.target = v));
     });
-    new Setting(contentEl).addButton((b) =>
-      b
-        .setButtonText("Merge")
-        .setDestructive()
+    new Setting(contentEl).addButton((b) => {
+      b.setButtonText("Merge")
         .setCta()
         .onClick(() => {
           if (!this.target) {
@@ -176,8 +174,12 @@ export class MergeTimelineModal extends Modal {
           }
           void this.onSubmit(this.target);
           this.close();
-        })
-    );
+        });
+      // Applied as a plain CSS class (rather than the version-gated
+      // setWarning()/setDestructive() ButtonComponent methods) so this
+      // doesn't depend on a specific Obsidian API version.
+      b.buttonEl.addClass("mod-warning");
+    });
   }
 
   onClose(): void {

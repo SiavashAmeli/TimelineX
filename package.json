@@ -1,6 +1,6 @@
 {
   "name": "timelinex",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A time-centric, multi-calendar timeline plugin for Obsidian.",
   "main": "main.js",
   "scripts": {

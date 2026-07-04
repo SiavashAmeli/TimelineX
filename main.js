@@ -641,16 +641,17 @@ var MergeTimelineModal = class extends import_obsidian3.Modal {
       dd.setValue(this.target);
       dd.onChange((v) => this.target = v);
     });
-    new import_obsidian3.Setting(contentEl).addButton(
-      (b) => b.setButtonText("Merge").setDestructive().setCta().onClick(() => {
+    new import_obsidian3.Setting(contentEl).addButton((b) => {
+      b.setButtonText("Merge").setCta().onClick(() => {
         if (!this.target) {
           new import_obsidian3.Notice("Choose a target timeline.");
           return;
         }
         void this.onSubmit(this.target);
         this.close();
-      })
-    );
+      });
+      b.buttonEl.addClass("mod-warning");
+    });
   }
   onClose() {
     this.contentEl.empty();
