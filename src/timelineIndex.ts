@@ -7,6 +7,7 @@ import {
 } from "./calendars";
 import { TimeLineXSettings } from "./settings";
 import { OrphanNote, TimeLineXEvent, TIMELINE_PALETTE, TimelineGroup } from "./types";
+import { toFrontmatterRecord } from "./frontmatter";
 
 /**
  * Scans the vault's markdown frontmatter for date/timeline properties and
@@ -55,7 +56,7 @@ export class TimeLineXIndex extends Component {
 
     for (const file of files) {
       const cache = this.app.metadataCache.getFileCache(file);
-      const fm = cache?.frontmatter as Record<string, unknown> | undefined;
+      const fm = toFrontmatterRecord(cache?.frontmatter);
       if (!fm) continue;
 
       const rawDate = fm[this.settings.dateKey];

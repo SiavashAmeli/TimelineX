@@ -10,7 +10,6 @@ export class TimeLineXSettingTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
-    new Setting(containerEl).setName("TimeLineX").setHeading();
 
     new Setting(containerEl)
       .setName("Display calendar")

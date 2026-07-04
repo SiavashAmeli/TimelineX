@@ -282,6 +282,12 @@ var TIMELINE_PALETTE = [
   // orange
 ];
 
+// src/frontmatter.ts
+function toFrontmatterRecord(value) {
+  if (value === void 0 || value === null) return void 0;
+  return value;
+}
+
 // src/timelineIndex.ts
 var TimeLineXIndex = class extends import_obsidian.Component {
   constructor(app, settings) {
@@ -322,7 +328,7 @@ var TimeLineXIndex = class extends import_obsidian.Component {
     const files = this.app.vault.getMarkdownFiles();
     for (const file of files) {
       const cache = this.app.metadataCache.getFileCache(file);
-      const fm = cache == null ? void 0 : cache.frontmatter;
+      const fm = toFrontmatterRecord(cache == null ? void 0 : cache.frontmatter);
       if (!fm) continue;
       const rawDate = fm[this.settings.dateKey];
       const rawTimeline = fm[this.settings.timelineKey];
@@ -445,7 +451,6 @@ var TimeLineXSettingTab = class extends import_obsidian2.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    new import_obsidian2.Setting(containerEl).setName("TimeLineX").setHeading();
     new import_obsidian2.Setting(containerEl).setName("Display calendar").setDesc(
       "Calendar used to label years and dates on the timeline. This only affects display \u2014 your notes' frontmatter is untouched."
     ).addDropdown(
@@ -1581,7 +1586,7 @@ var TimeLineXDateModal = class extends import_obsidian5.Modal {
     const { contentEl } = this;
     contentEl.createEl("h2", { text: `TimeLineX date \u2014 ${this.file.basename}` });
     const cache = this.app.metadataCache.getFileCache(this.file);
-    const fm = cache == null ? void 0 : cache.frontmatter;
+    const fm = toFrontmatterRecord(cache == null ? void 0 : cache.frontmatter);
     if (fm) {
       this.date = String((_a = fm[this.plugin.settings.dateKey]) != null ? _a : "");
       this.dateEnd = String((_b = fm[this.plugin.settings.dateEndKey]) != null ? _b : "");

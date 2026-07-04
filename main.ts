@@ -4,6 +4,7 @@ import { TimeLineXSettingTab } from "./src/settingsTab";
 import { TimeLineXSettings, DEFAULT_SETTINGS } from "./src/settings";
 import { TimeLineXView, VIEW_TYPE_TIMELINEX } from "./src/timelineView";
 import { CALENDAR_FULL_NAMES, CalendarSystem } from "./src/calendars";
+import { toFrontmatterRecord } from "./src/frontmatter";
 
 export default class TimeLineXPlugin extends Plugin {
   settings!: TimeLineXSettings;
@@ -90,7 +91,7 @@ class TimeLineXDateModal extends Modal {
     contentEl.createEl("h2", { text: `TimeLineX date — ${this.file.basename}` });
 
     const cache = this.app.metadataCache.getFileCache(this.file);
-    const fm = cache?.frontmatter as Record<string, unknown> | undefined;
+    const fm = toFrontmatterRecord(cache?.frontmatter);
     if (fm) {
       this.date = String(fm[this.plugin.settings.dateKey] ?? "");
       this.dateEnd = String(fm[this.plugin.settings.dateEndKey] ?? "");

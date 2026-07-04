@@ -2,7 +2,7 @@
   "id": "timelinex",
   "name": "TimeLineX",
   "version": "1.0.1",
-  "minAppVersion": "1.5.0",
+  "minAppVersion": "1.7.2",
   "description": "Organize and visualize notes chronologically across multiple overlaid timelines, with Gregorian, Persian (Solar Hijri), and Islamic (Hijri) calendar support.",
   "author": "Siavash Ameli",
   "authorUrl": "",
