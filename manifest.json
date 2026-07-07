@@ -3,9 +3,12 @@
   "name": "TimeLineX",
   "version": "1.0.2",
   "minAppVersion": "1.7.2",
-  "description": "Organize and visualize notes chronologically across multiple overlaid timelines, with Gregorian, Persian (Solar Hijri), and Islamic (Hijri) calendar support.",
+  "description": "Organize and visualize notes chronologically across multiple overlaid timelines, with Gregorian, Persian and Islamic calendar support.",
   "author": "Siavash Ameli",
-  "authorUrl": "",
-  "fundingUrl": "https://hamibash.com/sivashameli",
+  "authorUrl": "https://siavashameli.ir",
+  "fundingUrl": {
+    "Suppurt me Via IR Rial or Euro": "https://hamibash.com/siavashameli",
+    "ERC20 ETH": "0xA89121cF251B7bfdE908E697B0e447809b35C061",
+  }
   "isDesktopOnly": false
 }
