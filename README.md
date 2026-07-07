@@ -5,8 +5,8 @@
 [![GitHub Stars](https://img.shields.io/github/stars/siavashameli/TimelineX?style=social)](https://github.com/siavashameli/TimelineX)
  
 An Obsidian plugin that organizes and visualizes notes chronologically across
-multiple overlaid timelines — with Gregorian, Hijri Shamsi (Persian solar),
-and Hijri Qamari (Islamic lunar) calendar support.
+multiple overlaid timelines — with Gregorian, Hijri Shamsi (Persian),
+and Hijri Qamari (Islamic) calendar support.
  
 Instead of a folder or graph view, notes are placed on a **timeline** based on
 a `date` property in their frontmatter, and grouped into named timelines
