@@ -2,15 +2,53 @@
 
 **Author:** Siavash Ameli
 
+ 
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-EA4AAA?logo=github-sponsors&logoColor=white)](https://github.com/sponsors/siavashameli)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/REPLACE_ME)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/REPLACE_ME)
+[![GitHub Stars](https://img.shields.io/github/stars/siavashameli/TimelineX?style=social)](https://github.com/siavashameli/TimelineX)
+ 
 An Obsidian plugin that organizes and visualizes notes chronologically across
 multiple overlaid timelines — with Gregorian, Hijri Shamsi (Persian solar),
 and Hijri Qamari (Islamic lunar) calendar support.
-
+ 
 Instead of a folder or graph view, notes are placed on a **timeline** based on
 a `date` property in their frontmatter, and grouped into named timelines
 (e.g. "History of Wars", "History of Science") that can be overlaid,
 filtered, recolored, and viewed solo — and dragged directly on the canvas to
 retime them.
+ 
+## Support this project
+ 
+If TimeLineX is useful to you, the easiest way to say thanks costs nothing:
+⭐ **star the repo** and share it with someone who organizes notes by date.
+ 
+If you'd like to go further, donations are very welcome and directly fund
+continued development.
+ 
+### Crypto donations (USDT, TRC20)
+ 
+```
+PASTE_YOUR_USDT_TRC20_ADDRESS_HERE
+```
+ 
+⚠️ **Send USDT only, only on the Tron (TRC20) network**, to the address
+above. Sending USDT on a different network (ERC20, BEP20, etc.), or sending
+a different asset entirely, can result in permanent loss of funds. If
+you're not sure your wallet supports TRC20, check before sending.
+ 
+### Other options
+ 
+- 💚 [Sponsor on GitHub](https://github.com/sponsors/siavashameli)
+- ☕ [Buy me a coffee](https://buymeacoffee.com/siavashameli)
+- 🎁 [Ko-fi](https://ko-fi.com/siavashameli)
+
+Note: these three all route payouts through Stripe or PayPal, neither of
+which currently supports payouts to Iran. They're left in for supporters
+elsewhere in the world, and for cases where a friend/foreign account can
+help cash out on your behalf -- but the USDT (TRC20) address above is the
+option that works directly.
+
 
 ## Why this design
 
