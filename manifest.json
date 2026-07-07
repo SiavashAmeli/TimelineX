@@ -1,10 +1,23 @@
 {
+
+  "description": "Organize and visualize notes chronologically across multiple overlaid timelines, with Gregorian, Persian (Solar Hijri), and Islamic (Hijri) calendar support.",
+  "author": "Siavash Ameli",
+  "authorUrl": "",
+  "isDesktopOnly": false
+}
+
+
+{
   "id": "timelinex",
   "name": "TimeLineX",
   "version": "1.0.2",
   "minAppVersion": "1.7.2",
-  "description": "Organize and visualize notes chronologically across multiple overlaid timelines, with Gregorian, Persian (Solar Hijri), and Islamic (Hijri) calendar support.",
+  "description": "Organize and visualize notes chronologically across multiple overlaid timelines, with Gregorian, Persian, and Islamic calendar support.",
   "author": "Siavash Ameli",
-  "authorUrl": "",
+  "authorUrl": "https://siavashameli.ir",
+  "fundingUrl": {
+    "Hamibash (Iran, IRR/EUR)": "https://hamibash.com/sivashameli",
+    "USDT / ETH (ERC20)": "https://github.com/siavashameli/TimelineX#crypto-donations-erc20-ethereum-network",
+  },
   "isDesktopOnly": false
 }
